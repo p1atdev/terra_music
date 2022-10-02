@@ -16,6 +16,7 @@ class AlbumPage extends StatefulWidget {
 class _AlbumPageState extends State<AlbumPage> {
   AlbumDetail? _albumDetail;
   bool _loading = true;
+  int hoveringSongIndex = -1;
 
   void _fetchAlbumDetail() {
     final client = MonsterSiren();
@@ -147,75 +148,126 @@ class _AlbumPageState extends State<AlbumPage> {
                                       onPressed: () {},
                                       child: Padding(
                                         padding: const EdgeInsets.all(0),
-                                        child: Row(
-                                          children: [
-                                            SizedBox(
-                                              width: 48,
-                                              child: Text(
-                                                '${entry.key + 1}',
-                                                style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 24,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                            ),
-                                            Expanded(
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 8.0, right: 8.0),
-                                                child: Column(
+                                        child: LayoutBuilder(builder: (ctx, _) {
+                                          return GestureDetector(
+                                            child: MouseRegion(
+                                                cursor:
+                                                    SystemMouseCursors.click,
+                                                onEnter: (_) {
+                                                  if (mounted) {
+                                                    setState(() {
+                                                      hoveringSongIndex =
+                                                          entry.key;
+                                                    });
+                                                  }
+                                                },
+                                                onExit: (_) {
+                                                  if (mounted) {
+                                                    setState(() {
+                                                      hoveringSongIndex = -1;
+                                                    });
+                                                  }
+                                                },
+                                                child: Row(
                                                   children: [
-                                                    Align(
-                                                      alignment:
-                                                          Alignment.centerLeft,
-                                                      child: TextScroll(
-                                                        entry.value.name,
-                                                        style: const TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 24,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w500),
-                                                        mode: TextScrollMode
-                                                            .bouncing,
-                                                        velocity:
-                                                            const Velocity(
-                                                                pixelsPerSecond:
-                                                                    Offset(
-                                                                        25, 0)),
-                                                        delayBefore:
-                                                            const Duration(
-                                                                milliseconds:
-                                                                    3000),
-                                                        pauseBetween:
-                                                            const Duration(
-                                                                milliseconds:
-                                                                    5000),
-                                                        selectable: false,
+                                                    SizedBox(
+                                                      width: 48,
+                                                      child:
+                                                          hoveringSongIndex ==
+                                                                  entry.key
+                                                              ? Container(
+                                                                  child:
+                                                                      const Icon(
+                                                                    Icons
+                                                                        .play_arrow,
+                                                                    color: Colors
+                                                                        .white,
+                                                                  ),
+                                                                )
+                                                              : Text(
+                                                                  '${entry.key + 1}',
+                                                                  style:
+                                                                      const TextStyle(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontSize:
+                                                                        24,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                  ),
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                ),
+                                                    ),
+                                                    Expanded(
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                left: 8.0,
+                                                                right: 8.0),
+                                                        child: Column(
+                                                          children: [
+                                                            Align(
+                                                              alignment: Alignment
+                                                                  .centerLeft,
+                                                              child: TextScroll(
+                                                                entry
+                                                                    .value.name,
+                                                                style: const TextStyle(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontSize:
+                                                                        24,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500),
+                                                                mode: TextScrollMode
+                                                                    .bouncing,
+                                                                velocity: const Velocity(
+                                                                    pixelsPerSecond:
+                                                                        Offset(
+                                                                            25,
+                                                                            0)),
+                                                                delayBefore:
+                                                                    const Duration(
+                                                                        milliseconds:
+                                                                            3000),
+                                                                pauseBetween:
+                                                                    const Duration(
+                                                                        milliseconds:
+                                                                            5000),
+                                                                selectable:
+                                                                    false,
+                                                              ),
+                                                            ),
+                                                            Align(
+                                                              alignment: Alignment
+                                                                  .centerLeft,
+                                                              child: Text(
+                                                                entry.value
+                                                                    .artists
+                                                                    .join(', '),
+                                                                style: const TextStyle(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontSize:
+                                                                        16,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w300),
+                                                              ),
+                                                            )
+                                                          ],
+                                                        ),
                                                       ),
                                                     ),
-                                                    Align(
-                                                      alignment:
-                                                          Alignment.centerLeft,
-                                                      child: Text(
-                                                        entry.value.artists
-                                                            .join(', '),
-                                                        style: const TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w300),
-                                                      ),
-                                                    )
                                                   ],
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
+                                                )),
+                                          );
+                                        }),
                                       ),
                                     ),
                                   ),
