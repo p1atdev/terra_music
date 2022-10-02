@@ -43,6 +43,12 @@ dependencies:
       ref: master
   transparent_image: ^2.0.0
   text_scroll: ^0.1.0
+  breakpoint: ^1.2.0
+  window_size:
+    git:
+      url: https://github.com/google/flutter-desktop-embedding.git
+      path: plugins/window_size
+      ref: a738913
 
 
 dev_dependencies:

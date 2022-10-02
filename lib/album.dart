@@ -20,15 +20,19 @@ class _AlbumPageState extends State<AlbumPage> {
   void _fetchAlbumDetail() {
     final client = MonsterSiren();
     client.getAlbumDetail(widget.album.id).then((value) {
-      setState(() {
-        _albumDetail = value;
-      });
+      if (mounted) {
+        setState(() {
+          _albumDetail = value;
+        });
+      }
 
       //wait for 0.1 sec
       Future.delayed(const Duration(milliseconds: 100), () {
-        setState(() {
-          _loading = false;
-        });
+        if (mounted) {
+          setState(() {
+            _loading = false;
+          });
+        }
       });
     });
   }
@@ -60,15 +64,23 @@ class _AlbumPageState extends State<AlbumPage> {
                       tileMode: TileMode.clamp,
                     ).createShader(bounds);
                   },
-                  child: FadeInImage.memoryNetwork(
-                      placeholder: kTransparentImage,
-                      image: _albumDetail!.bannerUrl)),
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxHeight: 320),
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: FadeInImage.memoryNetwork(
+                        placeholder: kTransparentImage,
+                        image: _albumDetail!.bannerUrl,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  )),
             SafeArea(
               child: SingleChildScrollView(
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left: 12.0),
+                      padding: const EdgeInsets.only(left: 12.0, top: 12.0),
                       child: Align(
                         alignment: Alignment.topLeft,
                         child: TextButton(
